@@ -1,3 +1,4 @@
+var concat = require('gulp-concat');
 var connect = require('gulp-connect');
 var gulp = require('gulp');
 var path = require('path');
@@ -19,6 +20,7 @@ gulp.task('build', function() {
         }));
 
     return result.js
+        //.pipe(concat('test.js'))
         .pipe(gulp.dest('./test'));
 });
 

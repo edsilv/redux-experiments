@@ -1,17 +1,16 @@
 import Reducer = Redux.Reducer;
+import * as actionTypes from './ActionTypes';
 
 const { createStore } = Redux;
-const INCREMENT: string = 'INCREMENT';
-const DECREMENT: string = 'DECREMENT';
 const $value = $('<h1></h1>');
 const $incrementButton = $('<button>+</button>');
 const $decrementButton = $('<button>-</button>');
 
 const counter: Reducer = (state = 0, action?) => {
     switch (action.type) {
-        case INCREMENT:
+        case actionTypes.INCREMENT:
             return state + 1;
-        case DECREMENT:
+        case actionTypes.DECREMENT:
             return state - 1;
         default:
             return state;
@@ -32,13 +31,13 @@ $(() => {
 
     $incrementButton.on('click', () => {
         store.dispatch({
-            type: INCREMENT
+            type: actionTypes.INCREMENT
         });
     });
 
     $decrementButton.on('click', () => {
         store.dispatch({
-            type: DECREMENT
+            type: actionTypes.DECREMENT
         });
     });
 
