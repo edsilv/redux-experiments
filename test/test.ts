@@ -1,5 +1,6 @@
 import Reducer = Redux.Reducer;
 import * as actionTypes from './ActionTypes';
+import * as actionCreators from './ActionCreators';
 
 const { createStore } = Redux;
 const $value = $('<h1></h1>');
@@ -30,15 +31,11 @@ $(() => {
     const $container = $('#container');
 
     $incrementButton.on('click', () => {
-        store.dispatch({
-            type: actionTypes.INCREMENT
-        });
+        store.dispatch(actionCreators.increment());
     });
 
     $decrementButton.on('click', () => {
-        store.dispatch({
-            type: actionTypes.DECREMENT
-        });
+        store.dispatch(actionCreators.decrement());
     });
 
     $container.append($value);
