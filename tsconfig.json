@@ -1,0 +1,21 @@
+{
+    "compilerOptions": {
+      "lib": [
+        "dom",
+        "es2015"
+      ],
+      "moduleResolution": "node",
+      "module": "es2015",
+      "target": "es2015",
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "outFile": "./build/build.js"
+    },
+    "include": [
+      "src"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  }
+  

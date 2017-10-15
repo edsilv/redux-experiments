@@ -1,6 +1,4 @@
-.idea
+.build
 npm-debug.log
 node_modules
 typings
-test/*.js
-!test/require-config.js

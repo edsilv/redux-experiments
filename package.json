@@ -5,15 +5,21 @@
   "main": "",
   "author": "Edward Silverton e.silverton@gmail.com",
   "license": "MIT",
+  "scripts": {
+    "del": "rm -r ./.build",
+    "build": "tsc",
+    "browserify": "browserify ./.build/*.js > ./www/bundle.js",
+    "copy": "cp ./src/*.html ./www && cp ./.build/* ./www",
+    "serve": "http-server ./www -p 8080",
+    "start": "npm run del && npm run build && npm run browserify && npm run copy && npm run serve"
+  },
   "dependencies": {
-    "jquery": "^2.1.4",
-    "redux": "^3.0.4"
+    "@types/jquery": "^3.2.13",
+    "@types/redux": "^3.6.0",
+    "redux": "^3.7.2"
   },
   "devDependencies": {
-    "gulp": "^3.9.0",
-    "gulp-concat": "^2.6.0",
-    "gulp-connect": "^2.2.0",
-    "gulp-typescript": "^2.9.2",
-    "requirejs": "^2.1.20"
+    "http-server": "^0.10.0",
+    "typescript": "^2.5.3"
   }
 }

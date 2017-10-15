@@ -1,8 +1,7 @@
-import Reducer = Redux.Reducer;
-import * as actionTypes from './ActionTypes';
-import * as actionCreators from './ActionCreators';
+import { Reducer, createStore } from 'redux';
+import { default as actionTypes } from './ActionTypes';
+import { default as actionCreators } from './ActionCreators';
 
-const { createStore } = Redux;
 const $value = $('<h1></h1>');
 const $incrementButton = $('<button>+</button>');
 const $decrementButton = $('<button>-</button>');
