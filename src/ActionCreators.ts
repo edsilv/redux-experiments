@@ -1,31 +1,11 @@
-import { ActionTypes } from './ActionTypes';
-//import { createAction } from 'redux-actions';
+import { TypeKeys, IncrementAction, DecrementAction } from './Actions';
 
-export default class ActionCreators {
+export const incrementCounter = (by: number): IncrementAction => ({
+    type: TypeKeys.INCREMENT,
+    by
+});
 
-    public static increment() {
-        return {
-            type: ActionTypes.INCREMENT
-        }
-    }
-
-    public static decrement() {
-        return {
-            type: ActionTypes.DECREMENT
-        }
-    }
-
-    // public static increment() {
-    //     return createAction<Counter, Counter>(
-    //         ActionTypes.INCREMENT,
-    //         (counter: Counter) => counter
-    //     );
-    // }
-
-    // public static decrement() {
-    //     return createAction<Counter, Counter>(
-    //         ActionTypes.DECREMENT,
-    //         (counter: Counter) => counter
-    //     );
-    // }
-}
+export const decrementCounter = (by: number): DecrementAction => ({
+    type: TypeKeys.DECREMENT,
+    by
+});

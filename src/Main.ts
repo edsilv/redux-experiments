@@ -1,57 +1,39 @@
-import { ActionTypes } from './ActionTypes';
-import { handleActions, Action } from 'redux-actions';
-import { IState, Counter } from "./Model";
+import { incrementCounter, decrementCounter } from './ActionCreators';
+import { State } from "./State";
 import { Store, createStore } from 'redux';
-import ActionCreators from './ActionCreators';
-import rootReducer from './Reducer';
+import { counterReducer } from './Reducer';
 
 const $value = $('<h1></h1>');
 const $incrementButton = $('<button>+</button>');
 const $decrementButton = $('<button>-</button>');
 
-const initialState: IState = <Counter>{
+const initialState: State = <State>{
     count: 0
 };
 
-export default handleActions<IState, Counter>({
-
-    [ActionTypes.INCREMENT]: (state: IState, action: Action<Counter>): IState => {
-        return {
-            count: state.count + 1,
-        };
-    },
-    [ActionTypes.DECREMENT]: (state: IState, action: Action<Counter>): IState => {
-        return {
-            count: state.count - 1,
-        };
-    }
-
-}, initialState);
-
 const render = () => {
-    $value.text(store.getState());
+    $value.text(store.getState().count);
 };
 
-const store: Store<any> = createStore(rootReducer, initialState);
-//const store: Store<any> = createStore(handleActions, initialState);
+const store: Store<State> = createStore(counterReducer, initialState);
 
 store.subscribe(render);
 
 $(function() {
 
-    const $container = $('#container');
+    const $app = $('#app');
     
     $incrementButton.on('click', () => {
-        store.dispatch(ActionCreators.increment());
+        store.dispatch(incrementCounter(1));
     });
 
     $decrementButton.on('click', () => {
-        store.dispatch(ActionCreators.decrement());
+        store.dispatch(decrementCounter(1));
     });
 
-    $container.append($value);
-    $container.append($incrementButton);
-    $container.append($decrementButton);
+    $app.append($value);
+    $app.append($incrementButton);
+    $app.append($decrementButton);
 
     render();
 });
