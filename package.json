@@ -6,19 +6,23 @@
   "author": "Edward Silverton e.silverton@gmail.com",
   "license": "MIT",
   "scripts": {
-    "del": "rm -r ./.build",
-    "build": "tsc",
-    "browserify": "browserify ./.build/*.js > ./www/bundle.js",
-    "copy": "cp ./src/*.html ./www && cp ./.build/* ./www",
+    "del": "rm -rf ./www && mkdir www",
+    "build": "npm run del && npm run tsbuild && npm run browserify && npm run copy",
+    "tsbuild": "tsc",
+    "browserify": "browserify ./src/Main.js -o ./www/bundle.js",
+    "copy": "cp ./src/*.html ./www",
     "serve": "http-server ./www -p 8080",
-    "start": "npm run del && npm run build && npm run browserify && npm run copy && npm run serve"
+    "start": "npm run build && npm run serve"
   },
   "dependencies": {
-    "@types/jquery": "^3.2.13",
-    "@types/redux": "^3.6.0",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-actions": "^2.2.1"
   },
   "devDependencies": {
+    "@types/jquery": "^3.2.13",
+    "@types/redux": "^3.6.0",
+    "@types/redux-actions": "^2.2.2",
+    "browserify": "^14.4.0",
     "http-server": "^0.10.0",
     "typescript": "^2.5.3"
   }
