@@ -3,37 +3,39 @@ import { State } from "./State";
 import { Store, createStore } from 'redux';
 import { counterReducer } from './Reducer';
 
-const $value = $('<h1></h1>');
-const $incrementButton = $('<button>+</button>');
-const $decrementButton = $('<button>-</button>');
-
 const initialState: State = <State>{
     count: 0
 };
 
+let value: HTMLHeadingElement;
+
 const render = () => {
-    $value.text(store.getState().count);
+    value.innerText = store.getState().count.toString();
 };
 
 const store: Store<State> = createStore(counterReducer, initialState);
 
 store.subscribe(render);
 
-$(function() {
-
-    const $app = $('#app');
+window.addEventListener('DOMContentLoaded', () => {
     
-    $incrementButton.on('click', () => {
+    const app = document.querySelector('#app');
+    value = document.createElement('h1');
+    app.appendChild(value);
+
+    const incrementButton = document.createElement('button');
+    incrementButton.textContent = "+";
+    incrementButton.onclick = () => {
         store.dispatch(incrementCounter(1));
-    });
+    }
+    app.appendChild(incrementButton);
 
-    $decrementButton.on('click', () => {
+    const decrementButton = document.createElement('button');
+    decrementButton.textContent = "-";
+    decrementButton.onclick = () => {
         store.dispatch(decrementCounter(1));
-    });
-
-    $app.append($value);
-    $app.append($incrementButton);
-    $app.append($decrementButton);
+    }
+    app.appendChild(decrementButton);
 
     render();
 });

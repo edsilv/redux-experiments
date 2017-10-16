@@ -1152,28 +1152,31 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ActionCreators_1 = require("./ActionCreators");
 const redux_1 = require("redux");
 const Reducer_1 = require("./Reducer");
-const $value = $('<h1></h1>');
-const $incrementButton = $('<button>+</button>');
-const $decrementButton = $('<button>-</button>');
 const initialState = {
     count: 0
 };
+let value;
 const render = () => {
-    $value.text(store.getState().count);
+    value.innerText = store.getState().count.toString();
 };
 const store = redux_1.createStore(Reducer_1.counterReducer, initialState);
 store.subscribe(render);
-$(function () {
-    const $app = $('#app');
-    $incrementButton.on('click', () => {
+window.addEventListener('DOMContentLoaded', () => {
+    const app = document.querySelector('#app');
+    value = document.createElement('h1');
+    app.appendChild(value);
+    const incrementButton = document.createElement('button');
+    incrementButton.textContent = "+";
+    incrementButton.onclick = () => {
         store.dispatch(ActionCreators_1.incrementCounter(1));
-    });
-    $decrementButton.on('click', () => {
+    };
+    app.appendChild(incrementButton);
+    const decrementButton = document.createElement('button');
+    decrementButton.textContent = "-";
+    decrementButton.onclick = () => {
         store.dispatch(ActionCreators_1.decrementCounter(1));
-    });
-    $app.append($value);
-    $app.append($incrementButton);
-    $app.append($decrementButton);
+    };
+    app.appendChild(decrementButton);
     render();
 });
 
