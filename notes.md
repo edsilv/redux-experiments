@@ -4,8 +4,7 @@ to ignore libs in browserify, add this to package.json:
 
 ```
   "browser": {
-    "redux": false,
-    "redux-actions": false
+    "redux": false
   },
 ```
 
