@@ -1,41 +1,90 @@
-import { incrementCounter, decrementCounter } from './ActionCreators';
+import { changeCollection, changeManifest, changeSequence, changeCanvas, changeRange, changeXYWH, changeRotation } from './ActionCreators';
 import { State } from "./State";
 import { Store, createStore } from 'redux';
-import { counterReducer } from './Reducer';
+import { IIIFReducer } from './Reducer';
 
 const initialState: State = <State>{
-    count: 0
+    collectionIndex: 0,
+    manifestIndex: 1,
+    sequenceIndex: 2,
+    canvasIndex: 3,
+    rangeId: 'http://example.com/rangeid',
+    xywh: '0,0,1000,1000',
+    rotation: 90 
 };
 
-let value: HTMLHeadingElement;
+let app: Element;
 
 const render = () => {
-    value.innerText = store.getState().count.toString();
+
+    app.innerHTML = '';
+
+    const value: HTMLHeadingElement = document.createElement('h2');
+    value.innerText = JSON.stringify(store.getState(), null, '\t');
+    app.appendChild(value);
+
+    const incrementCollectionButton = document.createElement('button');
+    incrementCollectionButton.textContent = "increment collection index";
+    incrementCollectionButton.onclick = () => {
+        store.dispatch(changeCollection(store.getState().collectionIndex + 1));
+    }
+    app.appendChild(incrementCollectionButton);
+
+    const incrementManifestButton = document.createElement('button');
+    incrementManifestButton.textContent = "increment manifest index";
+    incrementManifestButton.onclick = () => {
+        store.dispatch(changeManifest(store.getState().manifestIndex + 1));
+    }
+    app.appendChild(incrementManifestButton);
+
+    const incrementSequenceButton = document.createElement('button');
+    incrementSequenceButton.textContent = "increment sequence index";
+    incrementSequenceButton.onclick = () => {
+        store.dispatch(changeSequence(store.getState().sequenceIndex + 1));
+    }
+    app.appendChild(incrementSequenceButton);
+
+    const incrementCanvasButton = document.createElement('button');
+    incrementCanvasButton.textContent = "increment canvas index";
+    incrementCanvasButton.onclick = () => {
+        store.dispatch(changeCanvas(store.getState().canvasIndex + 1));
+    }
+    app.appendChild(incrementCanvasButton);
+
+    const rangeText = document.createElement('input');
+    rangeText.type = 'text';
+    rangeText.value = store.getState().rangeId ? store.getState().rangeId : null;
+    rangeText.onchange = function(ev: any) {
+        store.dispatch(changeRange(ev.target.value || null));
+    }
+    app.appendChild(rangeText);
+
+    const xywhText = document.createElement('input');
+    xywhText.type = 'text';
+    xywhText.value = store.getState().xywh ? store.getState().xywh : null;
+    xywhText.onchange = function(ev: any) {
+        if (ev.target.value.split(',').length === 4) {
+            store.dispatch(changeXYWH(ev.target.value));
+        }
+    }
+    app.appendChild(xywhText);
+
+    const rotationText = document.createElement('input');
+    rotationText.type = 'text';
+    rotationText.value = store.getState().rotation ? store.getState().rotation.toString() : null;
+    rotationText.onchange = function(ev: any) {
+        if (ev.target.value === '90' || ev.target.value === '180' || ev.target.value === '270') {
+            store.dispatch(changeRotation(Number(ev.target.value)));
+        }
+    }
+    app.appendChild(rotationText);
 };
 
-const store: Store<State> = createStore(counterReducer, initialState);
+const store: Store<State> = createStore(IIIFReducer, initialState);
 
 store.subscribe(render);
 
 window.addEventListener('DOMContentLoaded', () => {
-    
-    const app = document.querySelector('#app');
-    value = document.createElement('h1');
-    app.appendChild(value);
-
-    const incrementButton = document.createElement('button');
-    incrementButton.textContent = "+";
-    incrementButton.onclick = () => {
-        store.dispatch(incrementCounter(1));
-    }
-    app.appendChild(incrementButton);
-
-    const decrementButton = document.createElement('button');
-    decrementButton.textContent = "-";
-    decrementButton.onclick = () => {
-        store.dispatch(decrementCounter(1));
-    }
-    app.appendChild(decrementButton);
-
+    app = document.querySelector('#app');
     render();
 });

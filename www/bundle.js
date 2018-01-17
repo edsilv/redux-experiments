@@ -1127,12 +1127,32 @@ function symbolObservablePonyfill(root) {
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Actions_1 = require("./Actions");
-exports.incrementCounter = (by) => ({
-    type: Actions_1.TypeKeys.INCREMENT,
+exports.changeCollection = (by) => ({
+    type: Actions_1.TypeKeys.CHANGE_COLLECTION,
     by
 });
-exports.decrementCounter = (by) => ({
-    type: Actions_1.TypeKeys.DECREMENT,
+exports.changeManifest = (by) => ({
+    type: Actions_1.TypeKeys.CHANGE_MANIFEST,
+    by
+});
+exports.changeSequence = (by) => ({
+    type: Actions_1.TypeKeys.CHANGE_SEQUENCE,
+    by
+});
+exports.changeCanvas = (by) => ({
+    type: Actions_1.TypeKeys.CHANGE_CANVAS,
+    by
+});
+exports.changeRange = (by) => ({
+    type: Actions_1.TypeKeys.CHANGE_RANGE,
+    by
+});
+exports.changeXYWH = (by) => ({
+    type: Actions_1.TypeKeys.CHANGE_XYWH,
+    by
+});
+exports.changeRotation = (by) => ({
+    type: Actions_1.TypeKeys.CHANGE_ROTATION,
     by
 });
 
@@ -1141,8 +1161,13 @@ exports.decrementCounter = (by) => ({
 Object.defineProperty(exports, "__esModule", { value: true });
 var TypeKeys;
 (function (TypeKeys) {
-    TypeKeys["INCREMENT"] = "INCREMENT";
-    TypeKeys["DECREMENT"] = "DECREMENT";
+    TypeKeys["CHANGE_COLLECTION"] = "CHANGE_COLLECTION";
+    TypeKeys["CHANGE_MANIFEST"] = "CHANGE_MANIFEST";
+    TypeKeys["CHANGE_SEQUENCE"] = "CHANGE_SEQUENCE";
+    TypeKeys["CHANGE_CANVAS"] = "CHANGE_CANVAS";
+    TypeKeys["CHANGE_RANGE"] = "CHANGE_RANGE";
+    TypeKeys["CHANGE_XYWH"] = "CHANGE_XYWH";
+    TypeKeys["CHANGE_ROTATION"] = "CHANGE_ROTATION";
     TypeKeys["OTHER"] = "OTHER";
 })(TypeKeys = exports.TypeKeys || (exports.TypeKeys = {}));
 
@@ -1153,30 +1178,74 @@ const ActionCreators_1 = require("./ActionCreators");
 const redux_1 = require("redux");
 const Reducer_1 = require("./Reducer");
 const initialState = {
-    count: 0
+    collectionIndex: 0,
+    manifestIndex: 1,
+    sequenceIndex: 2,
+    canvasIndex: 3,
+    rangeId: 'http://example.com/rangeid',
+    xywh: '0,0,1000,1000',
+    rotation: 90
 };
-let value;
+let app;
 const render = () => {
-    value.innerText = store.getState().count.toString();
+    app.innerHTML = '';
+    const value = document.createElement('h2');
+    value.innerText = JSON.stringify(store.getState(), null, '\t');
+    app.appendChild(value);
+    const incrementCollectionButton = document.createElement('button');
+    incrementCollectionButton.textContent = "increment collection index";
+    incrementCollectionButton.onclick = () => {
+        store.dispatch(ActionCreators_1.changeCollection(store.getState().collectionIndex + 1));
+    };
+    app.appendChild(incrementCollectionButton);
+    const incrementManifestButton = document.createElement('button');
+    incrementManifestButton.textContent = "increment manifest index";
+    incrementManifestButton.onclick = () => {
+        store.dispatch(ActionCreators_1.changeManifest(store.getState().manifestIndex + 1));
+    };
+    app.appendChild(incrementManifestButton);
+    const incrementSequenceButton = document.createElement('button');
+    incrementSequenceButton.textContent = "increment sequence index";
+    incrementSequenceButton.onclick = () => {
+        store.dispatch(ActionCreators_1.changeSequence(store.getState().sequenceIndex + 1));
+    };
+    app.appendChild(incrementSequenceButton);
+    const incrementCanvasButton = document.createElement('button');
+    incrementCanvasButton.textContent = "increment canvas index";
+    incrementCanvasButton.onclick = () => {
+        store.dispatch(ActionCreators_1.changeCanvas(store.getState().canvasIndex + 1));
+    };
+    app.appendChild(incrementCanvasButton);
+    const rangeText = document.createElement('input');
+    rangeText.type = 'text';
+    rangeText.value = store.getState().rangeId ? store.getState().rangeId : null;
+    rangeText.onchange = function (ev) {
+        store.dispatch(ActionCreators_1.changeRange(ev.target.value || null));
+    };
+    app.appendChild(rangeText);
+    const xywhText = document.createElement('input');
+    xywhText.type = 'text';
+    xywhText.value = store.getState().xywh ? store.getState().xywh : null;
+    xywhText.onchange = function (ev) {
+        if (ev.target.value.split(',').length === 4) {
+            store.dispatch(ActionCreators_1.changeXYWH(ev.target.value));
+        }
+    };
+    app.appendChild(xywhText);
+    const rotationText = document.createElement('input');
+    rotationText.type = 'text';
+    rotationText.value = store.getState().rotation ? store.getState().rotation.toString() : null;
+    rotationText.onchange = function (ev) {
+        if (ev.target.value === '90' || ev.target.value === '180' || ev.target.value === '270') {
+            store.dispatch(ActionCreators_1.changeRotation(Number(ev.target.value)));
+        }
+    };
+    app.appendChild(rotationText);
 };
-const store = redux_1.createStore(Reducer_1.counterReducer, initialState);
+const store = redux_1.createStore(Reducer_1.IIIFReducer, initialState);
 store.subscribe(render);
 window.addEventListener('DOMContentLoaded', () => {
-    const app = document.querySelector('#app');
-    value = document.createElement('h1');
-    app.appendChild(value);
-    const incrementButton = document.createElement('button');
-    incrementButton.textContent = "+";
-    incrementButton.onclick = () => {
-        store.dispatch(ActionCreators_1.incrementCounter(1));
-    };
-    app.appendChild(incrementButton);
-    const decrementButton = document.createElement('button');
-    decrementButton.textContent = "-";
-    decrementButton.onclick = () => {
-        store.dispatch(ActionCreators_1.decrementCounter(1));
-    };
-    app.appendChild(decrementButton);
+    app = document.querySelector('#app');
     render();
 });
 
@@ -1184,12 +1253,78 @@ window.addEventListener('DOMContentLoaded', () => {
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const Actions_1 = require("./Actions");
-exports.counterReducer = (s, action) => {
+exports.IIIFReducer = (s, action) => {
     switch (action.type) {
-        case Actions_1.TypeKeys.INCREMENT:
-            return { count: s.count + action.by };
-        case Actions_1.TypeKeys.DECREMENT:
-            return { count: s.count - action.by };
+        case Actions_1.TypeKeys.CHANGE_COLLECTION:
+            return {
+                collectionIndex: action.by,
+                manifestIndex: 0,
+                sequenceIndex: 0,
+                canvasIndex: 0,
+                rangeId: null,
+                xywh: null,
+                rotation: null
+            };
+        case Actions_1.TypeKeys.CHANGE_MANIFEST:
+            return {
+                collectionIndex: s.collectionIndex,
+                manifestIndex: action.by,
+                sequenceIndex: 0,
+                canvasIndex: 0,
+                rangeId: null,
+                xywh: null,
+                rotation: null
+            };
+        case Actions_1.TypeKeys.CHANGE_SEQUENCE:
+            return {
+                collectionIndex: s.collectionIndex,
+                manifestIndex: s.manifestIndex,
+                sequenceIndex: action.by,
+                canvasIndex: 0,
+                rangeId: null,
+                xywh: null,
+                rotation: null
+            };
+        case Actions_1.TypeKeys.CHANGE_CANVAS:
+            return {
+                collectionIndex: s.collectionIndex,
+                manifestIndex: s.manifestIndex,
+                sequenceIndex: s.sequenceIndex,
+                canvasIndex: action.by,
+                rangeId: null,
+                xywh: null,
+                rotation: null
+            };
+        case Actions_1.TypeKeys.CHANGE_RANGE:
+            return {
+                collectionIndex: s.collectionIndex,
+                manifestIndex: s.manifestIndex,
+                sequenceIndex: s.sequenceIndex,
+                canvasIndex: s.canvasIndex,
+                rangeId: action.by,
+                xywh: null,
+                rotation: null
+            };
+        case Actions_1.TypeKeys.CHANGE_XYWH:
+            return {
+                collectionIndex: s.collectionIndex,
+                manifestIndex: s.manifestIndex,
+                sequenceIndex: s.sequenceIndex,
+                canvasIndex: s.canvasIndex,
+                rangeId: s.rangeId,
+                xywh: action.by,
+                rotation: s.rotation
+            };
+        case Actions_1.TypeKeys.CHANGE_ROTATION:
+            return {
+                collectionIndex: s.collectionIndex,
+                manifestIndex: s.manifestIndex,
+                sequenceIndex: s.sequenceIndex,
+                canvasIndex: s.canvasIndex,
+                rangeId: s.rangeId,
+                xywh: s.xywh,
+                rotation: action.by
+            };
         default:
             return s;
     }
