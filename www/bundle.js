@@ -1218,6 +1218,7 @@ const render = () => {
     app.appendChild(incrementCanvasButton);
     const rangeText = document.createElement('input');
     rangeText.type = 'text';
+    rangeText.placeholder = 'rangeId';
     rangeText.value = store.getState().rangeId ? store.getState().rangeId : null;
     rangeText.onchange = function (ev) {
         store.dispatch(ActionCreators_1.changeRange(ev.target.value || null));
@@ -1225,6 +1226,7 @@ const render = () => {
     app.appendChild(rangeText);
     const xywhText = document.createElement('input');
     xywhText.type = 'text';
+    xywhText.placeholder = 'xywh';
     xywhText.value = store.getState().xywh ? store.getState().xywh : null;
     xywhText.onchange = function (ev) {
         if (ev.target.value.split(',').length === 4) {
@@ -1234,6 +1236,7 @@ const render = () => {
     app.appendChild(xywhText);
     const rotationText = document.createElement('input');
     rotationText.type = 'text';
+    rotationText.placeholder = 'rotation';
     rotationText.value = store.getState().rotation ? store.getState().rotation.toString() : null;
     rotationText.onchange = function (ev) {
         if (ev.target.value === '90' || ev.target.value === '180' || ev.target.value === '270') {
